@@ -1,24 +1,22 @@
 const main = async () => {
-    const [owner, randomPerson] = await hre.ethers.getSigners();
     const gmContractFactory = await hre.ethers.getContractFactory('GmPortal');
     const gmContract = await gmContractFactory.deploy();
     await gmContract.deployed();
   
     console.log('Contract deployed to:', gmContract.address);
-    console.log('Contract deployed by:', owner.address);
   
     let gmCount;
     gmCount = await gmContract.getTotalGms();
   
-    let gmTxn = await gmContract.gm();
-    await gmTxn.wait();
-  
-    gmCount = await gmContract.getTotalGms();
-  
-    gmTxn = await gmContract.connect(randomPerson).gm();
-    await gmTxn.wait();
-  
-    gmCount = await gmContract.getTotalGms();
+    let gmTxn = await gmContract.gm('Foo');
+    await gmTxn.wait(); // Wait for the transaction to be mined
+
+    const [_, randomPerson] = await hre.ethers.getSigners();
+    gmTxn = await gmContract.connect(randomPerson).gm('Bar');
+    await gmTxn.wait(); // Wait for the transaction to be mined
+
+    let allGms = await gmContract.getAllGms();
+    console.log(allGms);
   };
   
   const runMain = async () => {
