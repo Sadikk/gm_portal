@@ -7,7 +7,7 @@ const main = async () => {
   
     const Token = await hre.ethers.getContractFactory('GmPortal');
     const portal = await Token.deploy({
-      value: hre.ethers.utils.parseEther('1'),
+      value: hre.ethers.utils.parseEther('0.001'),
     });
     await portal.deployed();
   
