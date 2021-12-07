@@ -26,6 +26,10 @@ const main = async () => {
     let gmTxn = await gmContract.gm('Foo');
     await gmTxn.wait(); // Wait for the transaction to be mined
 
+    // test cooldown
+    // gmTxn = await gmContract.gm('Foo');
+    // await gmTxn.wait(); // Wait for the transaction to be mined
+
     const [_, randomPerson] = await hre.ethers.getSigners();
     gmTxn = await gmContract.connect(randomPerson).gm('Bar');
     await gmTxn.wait(); // Wait for the transaction to be mined

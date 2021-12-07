@@ -16,10 +16,8 @@ contract GmPortal {
         uint256 timestamp; // The timestamp when the user gmed.
     }
 
-    /*
-     * I declare a variable waves that lets me store an array of structs.
-     * This is what lets me hold all the waves anyone ever sends to me!
-     */
+    mapping(address => uint256) public lastGmedAt;
+
     Gm[] gms;
 
     constructor() payable {
@@ -28,11 +26,18 @@ contract GmPortal {
     }
 
     function gm(string memory _nickname) public {
+        require(
+            lastGmedAt[msg.sender] + 15 minutes < block.timestamp,
+            "Wait 15m"
+        );
+        lastGmedAt[msg.sender] = block.timestamp;
+
         totalGms += 1;
         console.log("%s has gmd!", msg.sender);
         gms.push(Gm(msg.sender, _nickname, block.timestamp));
         emit NewGm(msg.sender, block.timestamp, _nickname);
 
+        seed = (block.difficulty + block.timestamp + seed) % 100;
         if (seed <= 50) {
             console.log("%s won!", msg.sender);
             uint256 prizeAmount = 0.0001 ether;
